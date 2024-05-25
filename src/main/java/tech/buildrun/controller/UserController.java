@@ -1,11 +1,9 @@
 package tech.buildrun.controller;
 
-import io.vertx.ext.auth.User;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import tech.buildrun.controller.dto.CreateUserDto;
 import tech.buildrun.entity.UserEntity;
 import tech.buildrun.service.UserService;
 
@@ -36,27 +34,25 @@ public class UserController {
         return Response.ok(userService.createUser(userEntity)).build();
     }
 
-    @GET
-    @Path("/{id}")
-    public Response getUser(@PathParam("id") UUID userId) {
-        var user = userService.findById(userId);
-
-        return Response.ok(user).build();
-    }
-
     @PUT
     @Path("/{id}")
     @Transactional
-    public Response updateUser(@PathParam("id") UUID userId,
-                               UserEntity userEntity) {
-        var user = userService.updateUser(userId, userEntity);
-        return Response.ok(user).build();
+    public Response updateUser(@PathParam("id") UUID userId, UserEntity userEntity) {
+        return Response.ok(userService.updateUser(userId, userEntity)).build();
+    }
+
+
+    @GET
+    @Path("/{id}")
+    public Response getById(@PathParam("id") UUID userId) {
+        return Response.ok(userService.findById(userId)).build();
     }
 
     @DELETE
     @Path("/{id}")
-    public Response deleteUser(@PathParam("id") UUID userId) {
-        userService.deleteUser(userId);
+    @Transactional
+    public Response deleteById(@PathParam("id") UUID userId) {
+        userService.deleteById(userId);
         return Response.noContent().build();
     }
 }
